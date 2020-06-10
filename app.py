@@ -186,6 +186,13 @@ def scrape_info(id):
             df.loc[(df['sentiment'] == 0) & (df['rating'] == 10), 'sentiment'] = 1
             df.loc[(df['sentiment'] == 0) & (df['rating'] == 9), 'sentiment'] = 1
 
+            df.loc[(df['sentiment'] == 1) & (df['rating'] == 0), 'sentiment'] = 0
+            df.loc[(df['sentiment'] == 1) & (df['rating'] == 1), 'sentiment'] = 0
+            df.loc[(df['sentiment'] == 1) & (df['rating'] == 2), 'sentiment'] = 0
+            df.loc[(df['sentiment'] == 1) & (df['rating'] == 3), 'sentiment'] = 0
+            df.loc[(df['sentiment'] == 1) & (df['rating'] == 4), 'sentiment'] = 0
+
+
             df['review'] = df_aux['review'].values
             sentiment_score = (df.loc[df['sentiment'] == 1].shape[0] / df.shape[0]) * 10
             sentiment_score=round(sentiment_score,1)
@@ -236,25 +243,27 @@ def home():
 
 @app.route('/choices', methods=['POST'])
 def choices():
-    title = request.form.get('Search')
+    try:
+        title = request.form.get('Search')
 
-    if len(title.split()) == 1:
-        url = 'https://www.imdb.com/find?s=tt&q={}&ref_=nv_sr_sm'.format(title)
-    else:
-        title_str = "+".join(title.split())
-        url = 'https://www.imdb.com/find?s=tt&q={}&ref_=nv_sr_sm'.format(title_str)
+        if len(title.split()) == 1:
+            url = 'https://www.imdb.com/find?s=tt&q={}&ref_=nv_sr_sm'.format(title)
+        else:
+            title_str = "+".join(title.split())
+            url = 'https://www.imdb.com/find?s=tt&q={}&ref_=nv_sr_sm'.format(title_str)
 
-    title_id, movie_name, release_year = scrape_choice(url)
+        title_id, movie_name, release_year = scrape_choice(url)
 
-    return render_template('choices.html', title_id=title_id, movie_name=movie_name, release_year=release_year)
+        return render_template('choices.html', title_id=title_id, movie_name=movie_name, release_year=release_year)
+
+    except:
+        return render_template('error.html')
 
 
 @app.route('/predict/<string:id>')
 def predict(id):
 
         movie_name, Duration, Genre, Release_date, director, actors, imdb_rating, poster, df,sentiment_score = scrape_info(id)
-
-        print(movie_name,Duration,Genre,Release_date,director,actors,imdb_rating,poster)
 
         return render_template('predict.html',movie_name=movie_name, duration=Duration, genre=Genre, release_date=Release_date, director=director,
                               actors=actors, imdb_rating=imdb_rating, poster=poster, df=df,sentiment_score=sentiment_score)
