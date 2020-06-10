@@ -78,15 +78,6 @@ Pygments==2.6.1
 pylint==2.5.0
 pyparsing==2.4.6
 pyrsistent==0.16.0
-PySocks==1.7.1
-python-dateutil==2.8.1
-python-pdf==0.37
-pytz==2019.3
-pywin32==227
-pywinpty==0.5.7
-pyzipcode==2.0.0
-pyzmq==19.0.0
-qtconsole==4.6.0
 query-string==2019.4.13
 regex==2020.5.14
 request==2019.4.13
